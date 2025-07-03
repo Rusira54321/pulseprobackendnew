@@ -1,0 +1,11 @@
+const express = require("express")
+const router = express.Router()
+const {authtrainer,gettrainers,deleteTrainer,gettrainername,getTrainerbyID,updateTrainer,gettrainersbytrainer} = require("../controller/trainer")
+router.post("/login",authtrainer)
+router.post("/gettrainer",gettrainers)
+router.post("/deletetrainer",deleteTrainer)
+router.post("/gettrainername",gettrainername)
+router.post("/getTrainerbyid",getTrainerbyID)
+router.post("/updateTrainer",updateTrainer)
+router.post("/gettrainerbytrainer",gettrainersbytrainer)
+module.exports = router

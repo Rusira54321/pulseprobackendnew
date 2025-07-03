@@ -1,0 +1,10 @@
+const express = require("express")
+const router = express.Router()
+const {addDietPlan,getDietPlan,deleteDietPlan,getDietplanbyid,updateDietplan,getDietplanbymember} = require("../controller/DietPlan")
+router.post("/addDietPlan",addDietPlan)
+router.post("/getdietplan",getDietPlan)
+router.delete("/deletedietplan/:id",deleteDietPlan)
+router.get("/getdietplanbyid/:id",getDietplanbyid)
+router.post("/updatedietplan",updateDietplan)
+router.post("/getdietplanbymember",getDietplanbymember)
+module.exports = router

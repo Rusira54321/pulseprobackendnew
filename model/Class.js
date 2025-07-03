@@ -1,0 +1,32 @@
+const mongoose = require("mongoose")
+const classSchema = mongoose.Schema({
+    memberUsername:{
+        type:[String],
+        required:true
+    },
+    trainerusername:{
+        type:String,
+        required:true
+    },
+    classname:{
+        type:String,
+        required:true
+    },
+    date:{
+        type:String,
+        required:true
+    },
+    startTime:{
+        type:String,
+        required:true
+    },
+    endTime:{
+        type:String,
+        required:true
+    },
+    Description:{
+        type:String,
+        required:true
+    }
+})
+module.exports=mongoose.model("classess",classSchema)

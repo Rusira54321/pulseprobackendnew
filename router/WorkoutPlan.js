@@ -1,0 +1,10 @@
+const express = require("express")
+const {addworkoutPlan,getworkoutplan,deleteworkoutplan,getworkoutplanbyid,updateworkoutplan,getworkoutplanbymember} = require("../controller/Workoutplan")
+const router = express.Router()
+router.post("/addWorkoutPlan",addworkoutPlan)
+router.post("/getworkoutplan",getworkoutplan)
+router.delete("/delete/:id",deleteworkoutplan)
+router.post("/getworkoutplanbyid",getworkoutplanbyid)
+router.post("/updateworkoutplan/:id",updateworkoutplan)
+router.post("/getworkoutplanbymember",getworkoutplanbymember)
+module.exports = router

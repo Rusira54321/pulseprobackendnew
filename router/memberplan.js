@@ -1,0 +1,10 @@
+const express = require("express")
+const router = express.Router()
+const {addmembershipPlan,getmembershipplan,memberplandelete,getmembershipbyid,updatemembershipbyid,getmembershipplanbyplanid} = require("../controller/membershipPlan")
+router.post("/addmemberplan",addmembershipPlan)
+router.post("/get",getmembershipplan)
+router.delete("/delete/:id",memberplandelete)
+router.post("/getmembership",getmembershipbyid)
+router.post("/updatemembership",updatemembershipbyid)
+router.post("/getmembershipplanID",getmembershipplanbyplanid)
+module.exports = router

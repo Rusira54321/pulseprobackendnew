@@ -1,0 +1,41 @@
+const mongoose = require("mongoose")
+const supplimentSchema = mongoose.Schema({
+        supplimentName:{
+            type:String,
+            required:true
+        },
+        category:{
+            type:String,
+            required:true
+        },
+        brandName:{
+            type:String,
+            required:true
+        },
+        Quantity:{
+            type:Number,
+            required:true
+        },
+        UnitType:{
+            type:String,
+            required:true
+        },
+        ItemCode:{
+            type:String,
+            unique:true,
+            required:true
+        },
+        Price:{
+            type:Number,
+            required:true
+        },
+        image:{
+            type:String,
+            required:true
+        },
+        key:{
+            type:String,
+            required:true
+        }
+})
+module.exports = mongoose.model("suppliment",supplimentSchema)

@@ -1,0 +1,50 @@
+const mongoose = require("mongoose")
+const trainerSchema = mongoose.Schema({
+    name:{
+        type:String,
+        unique:true,
+        required:true
+    },
+    username:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    password:{
+        type:String,
+        required:true
+    },
+    key:{
+        type:String,
+        required:true
+    },
+    email:{
+        type:String,
+        required:true,
+        unique:true
+    },
+    phone:{
+        type:String,
+        required:true
+    },
+    gender:{
+        type:String,
+        enum:["Male","Female","Other"],
+        required:true
+    },
+    dob:{
+        type:Date,
+        required:true
+    },
+    noOfstudents:{
+        type:Number,
+        default:0,
+        required:true
+    },
+    profileimage:{
+        type:String,
+        required:true
+    }
+})
+
+module.exports = mongoose.model("trainer",trainerSchema)

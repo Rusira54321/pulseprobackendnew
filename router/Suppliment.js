@@ -1,0 +1,11 @@
+const express = require("express")
+const {addSuppliment,getSuppliments,deleteSupplement,getsupplimentbyId,updateSuppliment,getsupplementsbyids} = require("../controller/Suppliment")
+const {upload}= require("../middleware/multer")
+const router = express.Router()
+router.post("/addsuppliment",upload.single("image"),addSuppliment)
+router.post("/getsuppliment",getSuppliments)
+router.delete("/deleteSuppliment/:id",deleteSupplement)
+router.post("/getSupplimentbyid",getsupplimentbyId)
+router.post("/updateSuppliment",updateSuppliment)
+router.post("/getsupplementsbyids",getsupplementsbyids)
+module.exports = router
