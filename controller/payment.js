@@ -6,8 +6,8 @@ const {transporter} = require("../util/nodemailer")
 const supplement = require("../model/Suppliment")
 const member = require("../model/member")
 const paymentbycash = async(req,res) =>{
-    const {items,totalpayment,customerpayment,balance} = req.body
-    if(!items || !totalpayment || !customerpayment || !balance)
+    const {items,totalpayment,customerpayment,balance,key} = req.body
+    if(!items || !totalpayment || !customerpayment || !balance||!key)
     {
         return res.status(400).json({message:"missing fields"})
     }else{
@@ -24,7 +24,8 @@ const paymentbycash = async(req,res) =>{
             purchaseitems:purchaseitems,
             totalAmount:totalpayment,
             customer_payment:customerpayment,
-            balance:balance
+            balance:balance,
+            gym:key
         })
         await newpayment.save()
         for(const item of items)
@@ -53,8 +54,8 @@ const paymentbycash = async(req,res) =>{
     }
 }
 const membershippaymentbycash = async(req,res) =>{
-    const {items,balance,customerpayment} = req.body
-    if(!items|| !balance || !customerpayment)
+    const {items,balance,customerpayment,key} = req.body
+    if(!items|| !balance || !customerpayment || !key)
     {
         return res.status(400).json({message:"Missing fields"})
     }else
@@ -75,7 +76,8 @@ const membershippaymentbycash = async(req,res) =>{
             purchaseitems:[planID],
             totalAmount:items[0].totalprice,
             customer_payment: customerpayment,
-            balance:balance
+            balance:balance,
+            gym:key
         })
         await newpayment.save()
         const mainOptions = {
@@ -91,4 +93,15 @@ const membershippaymentbycash = async(req,res) =>{
     }
     }
 }
-module.exports = {paymentbycash,membershippaymentbycash}
+const getpayments = async(req,res) =>{
+    const {key} = req.body
+    if(key)
+    {
+        const payments = await payment.find({gym:key})
+        if(payments)
+        {
+            return res.status(200).json({payments:payments})
+        }
+    }
+}
+module.exports = {paymentbycash,membershippaymentbycash,getpayments}

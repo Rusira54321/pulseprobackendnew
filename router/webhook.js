@@ -26,7 +26,7 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
 
     const customerUsername = session.metadata.customerUsername;
     const items = JSON.parse(session.metadata.items);
-
+    const gymkey = session.metadata.key 
     try {
       if(items[0].planID!=null)
       {
@@ -45,7 +45,8 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
               purchaseitems:[planid],
               totalAmount:items[0].totalprice,
               customer_payment:items[0].totalprice,
-              balance:0
+              balance:0,
+              gym:gymkey
            })
         await newpayment.save()
         const mainOptions = {
@@ -77,6 +78,7 @@ router.post("/webhook", express.raw({ type: "application/json" }), async (req, r
         purchaseitems: itemcodearray,
         totalAmount: total,
         customer_payment: total,
+        gym:gymkey
       });
 
       await newpayment.save();

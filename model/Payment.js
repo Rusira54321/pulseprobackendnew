@@ -26,6 +26,10 @@ const paymentSchema = new mongoose.Schema({
     paymentDate:{
         type:Date,
         default:Date.now()
+    },gym:
+    {
+        type:String,
+        required:true
     }
 })
 module.exports = mongoose.model('Payment', paymentSchema);

@@ -138,4 +138,15 @@ const getemail = async(req,res) =>{
                 }
         }
 }
-module.exports = {creategym,authgym,authemail,authotp,resetPassword,getemail}
+const getgymdata = async(req,res) =>{
+        const {key} = req.body
+        const gym = await gymmodel.findOne({username:key})
+        if(gym)
+        {
+             return res.status(200).json({gym:gym})   
+        }
+}
+const numberoftotalmembers = async(req,res) =>{
+
+}
+module.exports = {creategym,authgym,authemail,authotp,resetPassword,getemail,getgymdata,numberoftotalmembers}

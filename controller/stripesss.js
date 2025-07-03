@@ -2,7 +2,7 @@ const dotenv = require("dotenv")
 dotenv.config()
 const stripe = require("stripe")(process.env.Stripe_secretkey)
 const stripess = async(req,res) =>{
-        const {items} = req.body;
+        const {items,key} = req.body;
         const lineItems = items.map((item)=>(
             {
                 price_data:{
@@ -24,7 +24,8 @@ const stripess = async(req,res) =>{
             cancel_url:"http://localhost:5173/unsuccessful-payment",
             metadata: {
                         customerUsername: items[0].customer,
-                        items: JSON.stringify(items)  // stringify items for later use
+                        items: JSON.stringify(items),
+                        key:key  // stringify items for later use
                       }
         })
         res.status(200).json({id:session.id});
@@ -34,7 +35,7 @@ const stripess = async(req,res) =>{
     }
 } 
 const memberpaymentstripe = async(req,res) =>{
-     const {items} = req.body;
+     const {items,key} = req.body;
         const lineItems = items.map((item)=>(
             {
                 price_data:{
@@ -56,7 +57,8 @@ const memberpaymentstripe = async(req,res) =>{
             cancel_url:"http://localhost:5173/unsuccessful-payment",
             metadata: {
                         customerUsername: items[0].memberusername,
-                        items: JSON.stringify(items)  // stringify items for later use
+                        items: JSON.stringify(items),
+                        key:key  // stringify items for later use
                       }
         })
         res.status(200).json({id:session.id});
