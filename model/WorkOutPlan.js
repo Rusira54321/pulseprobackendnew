@@ -40,6 +40,10 @@ const workoutSchema = mongoose.Schema({
     expiredAt:{
         type:Date,
         required:true
+    },
+    gym:{
+        type:String,
+        required:true
     }
 })
 module.exports = mongoose.model("WorkoutPlan",workoutSchema)

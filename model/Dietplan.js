@@ -16,6 +16,10 @@ const dietPlanSchema = new mongoose.Schema({
   expiredAt:{
     type:Date,
     default:null
+  },
+  gym:{
+    type:String,
+    required:true
   }
 })
 

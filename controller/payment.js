@@ -104,4 +104,29 @@ const getpayments = async(req,res) =>{
         }
     }
 }
-module.exports = {paymentbycash,membershippaymentbycash,getpayments}
+const getmonthlyrevenue = async(req,res) =>{
+    try {
+    const { key } = req.body
+
+    const revenue = await payment.aggregate([
+      { $match: { gym:key } },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$paymentDate" },
+            month: { $month: "$paymentDate" }
+          },
+          totalRevenue: { $sum: "$totalAmount" }
+        }
+      },
+      { $sort: { '_id.year': 1, '_id.month': 1 } }
+    ])
+
+    res.status(200).json({ revenue })
+  } catch (error) {
+    console.error("Error fetching revenue:", error)
+    res.status(500).json({ message: 'Server error' })
+  }
+
+}
+module.exports = {paymentbycash,membershippaymentbycash,getpayments,getmonthlyrevenue}

@@ -1,7 +1,7 @@
 const DietPlan = require("../model/Dietplan")
 const addDietPlan = async(req,res) =>{
-    const {memberUsername,trainerUsername,goal,duration,meals} = req.body
-    if(!memberUsername || !trainerUsername || !goal || !duration || !meals)
+    const {memberUsername,trainerUsername,goal,duration,meals,gym} = req.body
+    if(!memberUsername || !trainerUsername || !goal || !duration || !meals || !gym)
     {
         return res.status(400).json({message:"Missing fields"})
     }
@@ -18,7 +18,8 @@ const addDietPlan = async(req,res) =>{
                 goal:goal,
                 duration:duration,
                 meals:meals,
-                expiredAt
+                expiredAt,
+                gym:gym
         })
         await newdietplan.save().then(()=>{
             return res.status(201).json({message:"Diet plan is created successfully"})

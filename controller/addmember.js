@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt")
 const memberhistory = require("../model/MemberIdhistory")
 const trainerss = require("../model/Trainer")
 const member = require("../model/member")
+const workout = require("../model/WorkOutPlan")
+const dietplan = require("../model/Dietplan")
 const addmember = async(req,res) =>{
     const profileimage = req.file.filename
     const usernames = []
@@ -81,6 +83,29 @@ const getmemberdetails = async(req,res) =>{
 const deleteMember = async(req,res) =>{
     const {id} = req.body
     const members = await member.findOne({_id:id})
+    const memberusername = members.username
+    const matchgym = members.gym
+    const matchdietplans = await dietplan.find({gym:matchgym})
+    if(matchdietplans)
+    {
+        for(const dietplans of matchdietplans)
+        {
+            if(dietplans.memberUsername==memberusername){
+                 await dietplan.findByIdAndDelete(dietplans._id);
+            }
+        }
+    }
+    const matchworkoutplans = await workout.find({gym:matchgym})
+    if(matchworkoutplans)
+    {
+        for(const workouts of matchworkoutplans)
+        {
+            if(workouts.memberUsername==memberusername)
+            {
+                await workout.findByIdAndDelete(workouts._id)
+            }
+        }
+    }
     const traineruser = members.trainerusername
     const trainer = await trainerss.findOne({username:traineruser})
     if(trainer!=null)
@@ -88,7 +113,6 @@ const deleteMember = async(req,res) =>{
         trainer.noOfstudents= trainer.noOfstudents-1
         await trainer.save()
     }
-    
     const deletemember = await member.findByIdAndDelete(id)
     if(!deletemember)
     {

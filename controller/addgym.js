@@ -1,5 +1,8 @@
 const bcrypt = require("bcrypt")
 const gymmodel = require("../model/gym")
+const members = require("../model/member")
+const trainers = require("../model/Trainer")
+const payment = require("../model/Payment")
 const {transporter} = require("../util/nodemailer")
 const {generateToken} = require("../util/jwtUtil")
 const creategym = async(req,res) =>{
@@ -147,6 +150,51 @@ const getgymdata = async(req,res) =>{
         }
 }
 const numberoftotalmembers = async(req,res) =>{
-
+        const {key} = req.body
+        var numberofmembers = 0
+        if(key)
+        {
+                const matchmembers = await members.find({gym:key})
+                if(matchmembers)
+                {
+                        for(const member of matchmembers)
+                        {
+                                numberofmembers = numberofmembers+1
+                        }
+                }
+                return res.status(200).json({numberofmembers:numberofmembers})
+        }
 }
-module.exports = {creategym,authgym,authemail,authotp,resetPassword,getemail,getgymdata,numberoftotalmembers}
+const numberofTrainers = async(req,res) =>{
+        const {key} = req.body
+        var numberOftrainers = 0
+        if(key)
+        {
+                const matchtrainers = await trainers.find({key:key})
+                if(matchtrainers)
+                {
+                        for(const trainer of matchtrainers)
+                        {
+                                numberOftrainers = numberOftrainers + 1
+                        }
+                }
+                return res.status(200).json({numberoftrainers:numberOftrainers})
+        }
+}
+const totalrevenue = async(req,res) =>{
+        const {key} = req.body
+        var totalrevenue = 0
+        if(key)
+        {
+                const matchpayments = await payment.find({gym:key})
+                if(matchpayments)
+                {
+                        for(const paymentsss of matchpayments)
+                        {
+                                totalrevenue = totalrevenue + paymentsss.totalAmount
+                        }
+                }
+                return res.status(200).json({totalrevenue:totalrevenue})
+        }
+}
+module.exports = {creategym,authgym,authemail,authotp,resetPassword,getemail,getgymdata,numberoftotalmembers,numberofTrainers,totalrevenue}

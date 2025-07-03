@@ -59,4 +59,77 @@ const getAttendance = async(req,res) =>{
         return res.status(200).json({Attendance:attendancessss})
     }
 }
-module.exports = {addAttendance,getAttendance}
+const getmonthlyattendance = async(req,res) =>{
+  const {key} = req.body;
+  try {
+    const result = await attendanceModel.aggregate([
+      {
+        $match: { gym: key }
+      },
+      {
+        $addFields: {
+          month: {
+            $substr: ["$date", 3, 2] // Extract "MM" from "DD-MM-YYYY"
+          },
+          year: {
+            $substr: ["$date", 6, 4] // Extract "YYYY" from "DD-MM-YYYY"
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            month: "$month",
+            year: "$year",
+            status: "$Attendance_Status"
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: {
+          "_id.year": 1,
+          "_id.month": 1
+        }
+      }
+    ]);
+
+    // Format response into usable structure
+    const monthsMap = {
+      "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr", "05": "May", "06": "Jun",
+      "07": "Jul", "08": "Aug", "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+    };
+
+    const dataMap = {};
+
+    for (const item of result) {
+      const monthKey = `${monthsMap[item._id.month]}-${item._id.year}`;
+      if (!dataMap[monthKey]) {
+        dataMap[monthKey] = { Present: 0, Absent: 0, Sick: 0, Leave: 0, null: 0 };
+      }
+      const status = item._id.status === null ? "null" : item._id.status;
+      dataMap[monthKey][status] = item.count;
+    }
+
+    const chartLabels = Object.keys(dataMap);
+    const statuses = ["Present", "Absent", "Sick", "Leave", "null"];
+
+    const datasets = statuses.map(status => ({
+      label: status,
+      data: chartLabels.map(month => dataMap[month][status] || 0),
+      backgroundColor: {
+        Present: "#4caf50",
+        Absent: "#f44336",
+        Sick: "#ff9800",
+        Leave: "#2196f3",
+        null: "#9e9e9e"
+      }[status]
+    }));
+
+    res.json({ labels: chartLabels, datasets });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({ error: err.message });
+  }
+}
+module.exports = {addAttendance,getAttendance,getmonthlyattendance}
