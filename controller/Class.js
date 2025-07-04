@@ -87,4 +87,20 @@ const getClassess = async(req,res) =>{
     return res.status(200).json({classesss:matchclass})
   }
 }
-module.exports = {addClass,getClasses,getmembersdata,deleteClass,getClassess}
+const numberoftrainingsessions = async(req,res) =>{
+    const {username} = req.body
+    var numberofclasses = 0
+    if(username)
+    {
+      const matchclasses = await classes.find({trainerusername:username})
+      if(matchclasses)
+      {
+      for(const classess of matchclasses)
+      {
+        numberofclasses = numberofclasses +1
+      }
+      }
+      return res.status(200).json({numberofclasses:numberofclasses})
+    }
+}
+module.exports = {addClass,getClasses,getmembersdata,deleteClass,getClassess,numberoftrainingsessions}

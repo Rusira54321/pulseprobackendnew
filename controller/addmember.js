@@ -250,4 +250,17 @@ const getmembersusernamebyadmin = async(req,res) =>{
         return res.status(200).json({members:usernames})
     }
 }
-module.exports = {addmember,getmemberdetails,deleteMember,getmemberbyID,getmemberbyID,updatemember,getmemberdetailss,getmemberDetailBytrainer,authmember,getmembersusernamebyadmin}
+const getnumberofmembers = async(req,res) =>{
+        const {username} = req.body
+        var numberofmembers = 0
+        const matchmembers = await member.find({trainerusername:username})
+        if(matchmembers)
+        {
+            for(const members of matchmembers)
+            {
+                    numberofmembers = numberofmembers +1
+            }
+        }
+        return res.status(200).json({numberofmembers:numberofmembers})
+}
+module.exports = {addmember,getmemberdetails,deleteMember,getmemberbyID,getmemberbyID,updatemember,getmemberdetailss,getmemberDetailBytrainer,authmember,getmembersusernamebyadmin,getnumberofmembers}
