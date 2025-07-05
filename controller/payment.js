@@ -7,7 +7,7 @@ const supplement = require("../model/Suppliment")
 const member = require("../model/member")
 const paymentbycash = async(req,res) =>{
     const {items,totalpayment,customerpayment,balance,key} = req.body
-    if(!items || !totalpayment || !customerpayment || !balance||!key)
+    if(!items || !totalpayment || !customerpayment ||!key)
     {
         return res.status(400).json({message:"missing fields"})
     }else{

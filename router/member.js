@@ -1,5 +1,5 @@
 const express = require("express")
-const {getmemberdetails, deleteMember,getmemberbyID,updatemember,getmemberdetailss,getmemberDetailBytrainer,authmember,getmembersusernamebyadmin,getnumberofmembers,getmembergym,getmembertrainer} = require("../controller/addmember")
+const {getmemberdetails, deleteMember,getmemberbyID,updatemember,getmemberdetailss,getmemberDetailBytrainer,authmember,getmembersusernamebyadmin,getnumberofmembers,getmembergym,getmembertrainer,getmembername} = require("../controller/addmember")
 const router=  express.Router()
 router.post("/getmembers",getmemberdetails)
 router.post("/deletemember",deleteMember)
@@ -12,4 +12,5 @@ router.post("/getmemberusernamebyadmin",getmembersusernamebyadmin)
 router.post("/getnumberofmembers",getnumberofmembers)
 router.post("/getmembergym",getmembergym)
 router.post("/getmembertrainer",getmembertrainer)
+router.post("/getmembername",getmembername)
 module.exports = router
