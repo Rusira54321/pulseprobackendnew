@@ -267,4 +267,22 @@ const getnumberofmembers = async(req,res) =>{
         }
         return res.status(200).json({numberofmembers:numberofmembers})
 }
-module.exports = {addmember,getmemberdetails,deleteMember,getmemberbyID,getmemberbyID,updatemember,getmemberdetailss,getmemberDetailBytrainer,authmember,getmembersusernamebyadmin,getnumberofmembers}
+const getmembergym = async(req,res) =>{
+    const {key} = req.body
+    const matchmember = await member.findOne({username:key})
+    if(matchmember)
+    {
+        const gym = matchmember.gym
+        return res.status(200).json({gym:gym})
+    }
+}
+const getmembertrainer = async(req,res) =>{
+    const {key} = req.body
+    const matchmember = await member.findOne({username:key})
+    if(matchmember)
+    {
+        const trainer = matchmember.trainerusername
+        return res.status(200).json({trainer:trainer})
+    }
+}
+module.exports = {addmember,getmemberdetails,deleteMember,getmemberbyID,getmemberbyID,updatemember,getmemberdetailss,getmemberDetailBytrainer,authmember,getmembersusernamebyadmin,getnumberofmembers,getmembergym,getmembertrainer}

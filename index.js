@@ -51,7 +51,7 @@ app.use("/class", classroute);
 app.use("/stripes", striperoute);
 app.use("/payment", paymentrouter);
 app.use("/webhook", require("./router/webhook"));
-
+app.use("/notification",require("./router/notification"))
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 
@@ -73,6 +73,7 @@ const io = socketIo(server, {
     origin: "http://localhost:5173", // Your frontend URL
     methods: ["GET", "POST"],
   },
+  transports: ["websocket", "polling"]
 });
 
 // Map username_role => socket.id to handle unique user socket per role
@@ -81,30 +82,40 @@ const onlineUsers = new Map();
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);
 
-  // Register event must receive { username, role }
-  socket.on("register", ({ username, role } = {}) => {
-    if (!username || !role) {
-      console.log("⚠️ register event missing username or role", { username, role });
-      return;
-    }
+  socket.on("register", async ({ username, role } = {}) => {
+  if (!username || !role) {
+    console.log("⚠️ register event missing username or role");
+    return;
+  }
 
-    const key = `${username}_${role}`;
+  const key = `${username}_${role}`;
 
-    // If already connected, disconnect the old socket for this user-role combo
-    if (onlineUsers.has(key)) {
-      const oldSocketId = onlineUsers.get(key);
-      if (oldSocketId !== socket.id) {
-        const oldSocket = io.sockets.sockets.get(oldSocketId);
-        if (oldSocket) {
-          oldSocket.disconnect(true);
-          console.log(`Disconnected old socket for ${key}: ${oldSocketId}`);
-        }
+  // Disconnect old socket if needed
+  if (onlineUsers.has(key)) {
+    const oldSocketId = onlineUsers.get(key);
+    if (oldSocketId !== socket.id) {
+      const oldSocket = io.sockets.sockets.get(oldSocketId);
+      if (oldSocket) {
+        oldSocket.disconnect(true);
+        console.log(`Disconnected old socket for ${key}: ${oldSocketId}`);
       }
     }
+  }
 
-    onlineUsers.set(key, socket.id);
-    console.log(`User ${key} registered with socket ${socket.id}`);
+  onlineUsers.set(key, socket.id);
+  console.log(`User ${key} registered with socket ${socket.id}`);
+
+  // 🔁 Send all unread notifications from DB
+  const unreadNotifs = await Notification.find({
+    receiverUsername: username,
+    receiverRole: role,
+    isRead: false,
+  }).sort({ createdAt: -1 });
+
+  unreadNotifs.forEach((notif) => {
+    socket.emit("receiveNotification", notif);
   });
+});
 
   socket.on("sendNotification", async ({ sender, receiver, message }) => {
     console.log("⚡ Notification received on server", { sender, receiver, message });

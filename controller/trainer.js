@@ -141,4 +141,13 @@ const gettrainersbytrainer = async(req,res) =>{
             res.status(200).json({trainers:trainers})
         }
 }
-module.exports = {addtrainer,authtrainer,gettrainers,deleteTrainer,gettrainername,getTrainerbyID,updateTrainer,gettrainersbytrainer}
+const gettrainergym = async(req,res) =>{
+    const {key} = req.body
+    const matchtrainer  = await trainer.findOne({key:key})
+    if(matchtrainer)
+    {
+        const gym = matchtrainer.key
+        return res.status(200).json({gym:gym})
+    }
+}
+module.exports = {addtrainer,authtrainer,gettrainers,deleteTrainer,gettrainername,getTrainerbyID,updateTrainer,gettrainersbytrainer,gettrainergym}
