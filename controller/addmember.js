@@ -4,6 +4,8 @@ const trainerss = require("../model/Trainer")
 const member = require("../model/member")
 const workout = require("../model/WorkOutPlan")
 const dietplan = require("../model/Dietplan")
+const aidietplan = require("../model/aidietplan")
+const aischedule = require("../model/aischedule")
 const addmember = async(req,res) =>{
     const profileimage = req.file.filename
     const usernames = []
@@ -119,6 +121,8 @@ const deleteMember = async(req,res) =>{
         return res.status(400).json({message:"Cannot delete the member"})
     }
     else{
+        await aidietplan.findOneAndDelete({memberusername:memberusername})
+        await aischedule.findOneAndDelete({memberusername:memberusername})
         return res.status(200).json({message:"member is deleted"})
     }
 }

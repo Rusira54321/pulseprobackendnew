@@ -206,4 +206,46 @@ const addSchedule = async(req,res) =>{
       }
   }
 }
-module.exports = { getSchedule,getDietplan,adddietplandata,addSchedule};
+const getaidietplan = async(req,res) =>{
+  const {username} = req.body
+  if(username)
+  {
+    const dietplans = await aidietplan.find({memberusername:username})
+    if(dietplans)
+    {
+      return res.status(200).json({dietplans:dietplans})
+    }
+  }
+}
+const deletedietplan = async(req,res) =>{
+  const {username} = req.body
+  try{
+   await aidietplan.findOneAndDelete({memberusername:username})
+   return res.status(200).json({message:"Deleted the diet plan"})
+  }catch(error)
+  {
+    return res.status(400).json({message:error})
+  }
+}
+const getworkoutplan = async(req,res) =>{
+    const {username} = req.body
+    if(username)
+    {
+      const matchaischedule = await aischedule.find({memberusername:username})
+      if(matchaischedule)
+      {
+        return res.status(200).json({aischedule:matchaischedule})
+      }
+    }
+}
+const deleteschedule = async(req,res) =>{
+    const {username} = req.body
+    try{
+   await aischedule.findOneAndDelete({memberusername:username})
+   return res.status(200).json({message:"Deleted the workout plan"})
+  }catch(error)
+  {
+    return res.status(400).json({message:error})
+  }
+}
+module.exports = { getSchedule,getDietplan,adddietplandata,addSchedule,getaidietplan,deletedietplan,getworkoutplan,deleteschedule};
